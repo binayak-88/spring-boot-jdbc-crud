@@ -1,0 +1,197 @@
+@RestController - this annotation makes a class a rest controller. Rest APIs, application
+  
+
+@Controller - Spring MVC - Model view Controller 
+		
+		
+		
+		REST API Principles and HTTP verbs:
+		----------------------------------
+		
+
+REST - Representational State Transfer.
+
+REST is stateless. 
+
+
+/employee/101
+
+
+/acconuts
+
+--------------------------
+
+which returns employee details by id.    single record       @GetMapping("/resourcename") - method level annotation, controller method is executed when a get HTTP request is called. 
+
+
+which returns who are managers.     multiple records .
+
+
+
+
+
+
+POST   -@PostMapping("/saveEMployye")
+
+		public void saveEMployye(){
+		
+		}
+		
+		
+		@PutMapping
+		
+		@PatchMapping 
+		
+		@Delete
+=============================
+
+
+an endpoint pr resource name should be noun.
+
+
+Get an employee -     /employee/{path paramater}
+	GetMapping 				  /employee/101 - it reruns record of the employee having eid 101 if available in DB.
+					  
+Get employees who are mid level experience( > 30 < 50)
+
+	GetMapping				  /employee?minAge=30&maxAge=50
+	
+	
+Creating one employee in DB .
+
+
+  PostMapping              /employee{
+							  
+								// payload 
+							  }
+					  
+=============================================
+
+
+Sprinf JDBC -
+			
+			DataSource Bean - 
+			
+			Controller 
+			
+				{ 
+				
+				getEmployee ()
+				getEmployees()
+				createEMployee()
+				deleteEmployee()
+				updateEMployee()
+				
+				}
+				
+				
+1) Controller 
+
+2) Service 
+
+3) DAO 
+
+4) AppConfig
+
+
+5) Postman 
+
+
+
+How to send a post request : 
+
+employee -  eid, ename, esal 
+
+{
+	"eid" : 101,
+	"ename" : "Mahesh",
+	"esal"= 19098888
+}
+
+
+== to a java pojo or java object 
+
+  Need to define a java class 
+
+ class Employee {
+
+	private int employeeId;
+	privatye String name;
+	private int sal;
+	
+	
+	set & get methods 
+
+} 
+
+
+
+ @postMapping("/employee")
+
+====================
+
+
+
+@RestController("/sales")
+public class EmployeeController{
+
+	
+	@GetMapping("/employee")
+	public void xxx(){
+	
+	
+	}
+	
+	
+	@PostMapping("/dept")
+	p v yyyy(){
+	
+	
+	}
+}
+
+/sales/employee
+
+/sales/dept 
+
+
+HTTP Staus Code :
+
+200 - OK
+
+201 - Created 
+
+
+404 - Not Found 
+
+500 - Internal Servicer error 
+
+401- Unathorized 
+
+403 - forbiddedn 
+
+ResponseEntiy = ResponseBody + status codes  
+
+ResponseEntiy<Sting>
+
+ResponseEntiy<Employee>
+
+
+
+
+
+Get and delete :
+
+
+I want to get/delete one employee record
+
+			/employee/{pathvariable}  eg . /employee/101  
+			
+I want to delete/get range of employees.  
+
+			/employee?startAge=50&endAGe=60@joinignDat=18733&
+			
+			/employeee?eid=101
+
+
+
