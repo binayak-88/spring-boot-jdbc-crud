@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import edu.learntek.crud.model.Employee;
+import edu.learntek.crud.model.MyUserDeatils;
 import edu.learntek.crud.service.EmployeeService;
 
 /**
@@ -30,20 +32,34 @@ public class EmployeeController {
 	@Autowired
 	private EmployeeService empoyeeService;
 	
+	@Autowired
+	private RestTemplate restTemplate;
+	
 	@PostMapping("/employee")
 	public ResponseEntity<String> saveEmployee(@RequestBody Employee employee) {
-		
-	  boolean result  =  empoyeeService.saveEmployee(employee.getEid(), employee.getName(), employee.getSal());
-	  ResponseEntity<String> responseEntity;
-		
-	  if(result) {
-		  responseEntity = new ResponseEntity<String>("Employee Created Successfully.....", HttpStatus.CREATED);
-	  }
-
-	  else {
-		  responseEntity = new ResponseEntity<String>("Employee Creation Failed  .....", HttpStatus.INTERNAL_SERVER_ERROR);
-	  }
-	  return responseEntity;
+	//pre authentication
+	 MyUserDeatils userDeatils = new MyUserDeatils();
+	 userDeatils.setUsername(employee.getUserid());
+	 userDeatils.setPassword(employee.getPassword());
+	 ResponseEntity<String> authResponse =  restTemplate.postForEntity("http://localhost:9091/auth", userDeatils, String.class);
+	 if(authResponse.getStatusCode().is4xxClientError()){
+		 return new ResponseEntity<String>("Usrname an dpassword is wrong : ", HttpStatus.UNAUTHORIZED);
+	 }
+	 else if(authResponse.getBody().equals("SUCCESS")) {
+	// post authentication 
+		  boolean result  =  empoyeeService.saveEmployee(employee.getEid(), employee.getName(), employee.getSal());
+		  ResponseEntity<String> responseEntity;
+			
+		  if(result) {
+			  responseEntity = new ResponseEntity<String>("Employee Created Successfully.....", HttpStatus.CREATED);
+		  }
+	
+		  else {
+			  responseEntity = new ResponseEntity<String>("Employee Creation Failed  .....", HttpStatus.INTERNAL_SERVER_ERROR);
+		  }
+		  return responseEntity;
+	 }
+	 return null;
 	}
 	
 	@DeleteMapping("/employee/{eid}")
@@ -69,14 +85,14 @@ public class EmployeeController {
 	
 	@GetMapping("/employee/{eid}")
 	public ResponseEntity<?> getEmployee(@PathVariable("eid") int eid){
-		Optional<Employee> optional = empoyeeService.getEmployee(eid);
-		if(optional.isPresent()) {
-			ResponseEntity<Employee> res =new ResponseEntity<Employee>(optional.get(),HttpStatus.OK);
-			return res;
-		}
-		else {
-			ResponseEntity<String> res = new ResponseEntity<String>("No Eid available : "+eid,HttpStatus.BAD_REQUEST);
-			return res;
-		}
+			Optional<Employee> optional = empoyeeService.getEmployee(eid);
+			if(optional.isPresent()) {
+				ResponseEntity<Employee> res =new ResponseEntity<Employee>(optional.get(),HttpStatus.OK);
+				return res;
+			}
+			else {
+				ResponseEntity<String> res = new ResponseEntity<String>("No Eid available : "+eid,HttpStatus.BAD_REQUEST);
+				return res;
+			}
 	}
 }

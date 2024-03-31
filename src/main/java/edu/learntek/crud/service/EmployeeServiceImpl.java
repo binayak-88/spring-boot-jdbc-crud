@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.learntek.crud.dao.EmployeeDAO;
+import edu.learntek.crud.exception.EmployeeAlreadyExistsException;
+import edu.learntek.crud.exception.EmployeeNotFoundException;
 import edu.learntek.crud.model.Employee;
 
 /**
@@ -23,7 +25,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	private EmployeeDAO employeeDAO;
 
 	@Override
-	public boolean saveEmployee(int eid, String name, int sal) {
+	public boolean saveEmployee(int eid, String name, int sal) throws EmployeeAlreadyExistsException {
 		// TODO Auto-generated method stub
 		
 		return employeeDAO.saveEmployee(eid, name, sal);
@@ -42,7 +44,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public Optional<Employee> getEmployee(int eid) {
+	public Optional<Employee> getEmployee(int eid) throws EmployeeNotFoundException {
 		// TODO Auto-generated method stub
 		return employeeDAO.getEmployee(eid);
 	}
